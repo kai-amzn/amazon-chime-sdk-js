@@ -9,6 +9,8 @@ import {
   AudioVideoFacade,
   AudioVideoObserver,
   ClientMetricReport,
+  ConnectionHealthData,
+  ConnectionHealthPolicyConfiguration,
   ConsoleLogger,
   DefaultActiveSpeakerPolicy,
   DefaultAudioMixController,
@@ -26,6 +28,8 @@ import {
   TimeoutScheduler,
   VideoTileState,
 } from '../../../../src/index';
+
+import CustomReconnectionHealthPolicy from './CustomReconnectionHealthPolicy';
 
 class DemoTileOrganizer {
   private static MAX_TILES = 16;
@@ -119,6 +123,8 @@ export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver 
     'button-screen-share': false,
     'button-screen-view': false,
   };
+
+  customReconnectionHealthPolicy: CustomReconnectionHealthPolicy;
 
   constructor() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -912,9 +918,18 @@ export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver 
 
   async authenticate(): Promise<void> {
     let joinInfo = (await this.joinMeeting()).JoinInfo;
-    this.initializeMeetingSession(
-      new MeetingSessionConfiguration(joinInfo.Meeting, joinInfo.Attendee)
+
+    const connectionHealthPolicyConfiguration = new ConnectionHealthPolicyConfiguration();
+    connectionHealthPolicyConfiguration.connectionWaitTimeMs = Infinity;
+    this.customReconnectionHealthPolicy = new CustomReconnectionHealthPolicy(
+      connectionHealthPolicyConfiguration,
+      10000
     );
+
+    const meetingSessionConfiguration = new MeetingSessionConfiguration(joinInfo.Meeting, joinInfo.Attendee);
+    meetingSessionConfiguration.connectionHealthPolicyConfiguration = connectionHealthPolicyConfiguration;
+    this.initializeMeetingSession(meetingSessionConfiguration);
+
     const url = new URL(window.location.href);
     url.searchParams.set('m', this.meeting);
     history.replaceState({}, `${this.meeting}`, url.toString());
@@ -1184,6 +1199,20 @@ export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver 
 
   videoSendDidBecomeUnavailable(): void {
     this.log('sending video is not available');
+  }
+
+  connectionHealthDidChange(connectionHealthData: ConnectionHealthData): void {
+    this.customReconnectionHealthPolicy.update(connectionHealthData);
+    const reconnectionValue = this.customReconnectionHealthPolicy.healthIfChanged();
+    if (reconnectionValue !== null) {
+      this.log(`reconnection health is now: ${reconnectionValue}`);
+      if (reconnectionValue === 0) {
+        // @ts-ignore
+        this.audioVideo.audioVideoController.handleMeetingSessionStatus(
+          new MeetingSessionStatus(MeetingSessionStatusCode.ConnectionHealthReconnect)
+        );
+      }
+    }
   }
 }
 
