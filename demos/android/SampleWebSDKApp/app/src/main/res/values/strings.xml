@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Chime SDK Demo</string>
+    <string name="edit_meeting_id">Meeting ID</string>
+    <string name="edit_name">Your Name</string>
+    <string name="button_continue">Continue</string>
+    <string name="main_title">Join a meeting</string>
+    <string name="test_url">https://2283i4zl27.execute-api.us-east-1.amazonaws.com/Prod/</string>
+</resources>
