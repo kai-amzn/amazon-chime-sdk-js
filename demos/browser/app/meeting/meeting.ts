@@ -935,6 +935,8 @@ export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver 
     if (device === null) {
       this.audioVideo.stopLocalVideoTile();
       this.toggleButton('button-camera', 'off');
+      // choose video input null is redundant since we expect stopLocalVideoTile to clean up
+      await this.audioVideo.chooseVideoInputDevice(device);
       throw new Error('no video device selected');
     }
     await this.audioVideo.chooseVideoInputDevice(device);
