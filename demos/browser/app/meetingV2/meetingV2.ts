@@ -305,6 +305,9 @@ export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver,
     videoInputQuality.addEventListener('change', async (_ev: Event) => {
       this.log('Video input quality is changed');
       switch (videoInputQuality.value) {
+      case '180p':
+          this.audioVideo.chooseVideoInputQuality(320, 180, 15, 140);
+          break;
         case '360p':
           this.audioVideo.chooseVideoInputQuality(640, 360, 15, 600);
           break;
@@ -1279,7 +1282,7 @@ export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver,
       return;
     }
     const tileIndex = tileState.localTile
-      ? 16
+      ? 20 
       : this.tileOrganizer.acquireTileIndex(tileState.tileId);
     const tileElement = document.getElementById(`tile-${tileIndex}`) as HTMLDivElement;
     const videoElement = document.getElementById(`video-${tileIndex}`) as HTMLVideoElement;

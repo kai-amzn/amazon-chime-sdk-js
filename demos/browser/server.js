@@ -12,7 +12,8 @@ const uuid = require('uuid/v4');
 const meetingTable = {};
 
 // Use local host for application server
-const host = '127.0.0.1:8080';
+//const host = '127.0.0.1:8080';
+const host = '0.0.0.0:8080';
 
 // Load the contents of the web application to be used as the index page
 const indexPage = fs.readFileSync(`dist/${process.env.npm_config_app || 'meetingV2'}.html`);
