@@ -5,6 +5,7 @@ const AWS = require('aws-sdk');
 const compression = require('compression');
 const fs = require('fs');
 const http = require('http');
+const https = require('https');
 const url = require('url');
 const uuid = require('uuid/v4');
 
@@ -26,8 +27,14 @@ const chime = new AWS.Chime({ region: 'us-east-1' });
 // Set the AWS SDK Chime endpoint. The global endpoint is https://service.chime.aws.amazon.com.
 chime.endpoint = new AWS.Endpoint(process.env.ENDPOINT || 'https://service.chime.aws.amazon.com');
 
+const options = {
+	key: fs.readFileSync ('snakeoil.key'),
+	cert: fs.readFileSync ('snakeoil.pem')
+};
+
 // Start an HTTP server to serve the index page and handle meeting actions
-http.createServer({}, async (request, response) => {
+https.createServer(options, async (request, response) => {
+//http.createServer({}, async (request, response) => {
   log(`${request.method} ${request.url} BEGIN`);
   try {
     // Enable HTTP compression
@@ -96,7 +103,7 @@ http.createServer({}, async (request, response) => {
   }
   log(`${request.method} ${request.url} END`);
 }).listen(host.split(':')[1], host.split(':')[0], () => {
-  log(`server running at http://${host}/`);
+  log(`server running at https://${host}/`);
 });
 
 function log(message) {
