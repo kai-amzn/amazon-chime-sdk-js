@@ -37,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [Demo] Update dependencies, too.
 - Remove unnecessary startAudioPreview in meeting demo
 - Fix video tile with incorrect bound attendee ID and external User ID
+- Update max video tiles supportted from 16 to 20
 
 ### Removed
 - Revert the "Create log stream before logging begins" commit

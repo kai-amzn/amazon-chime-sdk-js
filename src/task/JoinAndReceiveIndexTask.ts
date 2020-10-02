@@ -21,7 +21,7 @@ import BaseTask from './BaseTask';
 export default class JoinAndReceiveIndexTask extends BaseTask {
   protected taskName = 'JoinAndReceiveIndexTask';
   private taskCanceler: TaskCanceler | null = null;
-  private maxVideos = 16;
+  private maxVideos = 30;
 
   constructor(private context: AudioVideoControllerState) {
     super(context.logger);
