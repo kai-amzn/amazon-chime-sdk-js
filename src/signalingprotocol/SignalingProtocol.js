@@ -1384,14 +1384,6 @@ $root.SdkJoinFrame = (function() {
     SdkJoinFrame.prototype.protocolVersion = 2;
 
     /**
-     * SdkJoinFrame maxNumOfVideos.
-     * @member {number} maxNumOfVideos
-     * @memberof SdkJoinFrame
-     * @instance
-     */
-    SdkJoinFrame.prototype.maxNumOfVideos = 8;
-
-    /**
      * SdkJoinFrame flags.
      * @member {number} flags
      * @memberof SdkJoinFrame
@@ -1578,7 +1570,6 @@ $root.SdkJoinFrame = (function() {
         var object = {};
         if (options.defaults) {
             object.protocolVersion = 2;
-            object.maxNumOfVideos = 8;
             object.flags = 0;
             object.clientDetails = null;
         }

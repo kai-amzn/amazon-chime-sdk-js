@@ -75,7 +75,6 @@ export default class DefaultSignalingClient implements SignalingClient {
     this.logger.info('sending join');
     const joinFrame = SdkJoinFrame.create();
     joinFrame.protocolVersion = 2;
-    joinFrame.maxNumOfVideos = settings.maxVideos;
     joinFrame.flags = SdkJoinFlags.HAS_STREAM_UPDATE;
     // Only Chrome currently supports the new send side bandwidth estimation
     const browserBehavior = new DefaultBrowserBehavior();
